@@ -1,4 +1,6 @@
-# Simple Ecommerce in Microservices Architetcture using GRPC
+# Simple Ecommerce 
+
+Simple e-commerce built with Microservices Architetcture using GRPC for service to service communication
 
 ## Instalation
 
