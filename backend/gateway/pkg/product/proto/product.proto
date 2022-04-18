@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package product;
+
+option go_package = "./pkg/product/pb";
+
+service ProductService {
+  rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse) {}
+  rpc FindOne(FindOneRequest) returns (FindOneResponse) {}
+  rpc ListProducts(ListProductsRequest) returns (ListProductsResponse) {}
+  rpc DecreaseStock(DecreaseStockRequest) returns (DecreaseStockResponse) {}
+}
+
+message Response {
+  string error = 1;
+  uint32 status = 2;
+}
+
+message Product {
+  uint64 productId = 1;
+  string name = 2;
+  string sku = 3;
+  uint64 stock = 4;
+  uint64 price = 5;
+}
+
+// CreateProduct
+message CreateProductRequest { Product product = 1; }
+
+message CreateProductResponse {
+  Response response = 1;
+  Product product = 2;
+}
+
+// FindOne
+message FindOneRequest { uint64 productId = 1; }
+
+message FindOneResponse {
+  Response response = 1;
+  Product product = 2;
+}
+
+// List Products
+message ListProductsRequest {}
+message ListProductsResponse {
+  Response response = 1;
+  repeated Product products = 2;
+}
+
+// Stock Decrease
+message DecreaseStockRequest {
+  uint64 productId = 1;
+  uint64 orderId = 2;
+  uint64 quantity = 3;
+}
+
+message DecreaseStockResponse { Response response = 1; }

@@ -1,0 +1,59 @@
+version: '3.0'
+
+services:
+  db:
+    image: postgres:14-alpine
+    container_name: ecommerce_db
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+    volumes:
+      - potsgreDB:/var/lib/postgresql/data
+      - ./create-db.sql:/docker-entrypoint-initdb.d/create_database.sql
+    networks:
+      - ecommerce
+  auth:
+    build: 
+      context: ./backend/auth
+    container_name: auth-ms
+    networks:
+      - ecommerce
+    depends_on:
+      - db
+  product:
+    build: 
+      context: ./backend/product
+    container_name: product-ms
+    networks:
+      - ecommerce
+    depends_on:
+      - db
+  order:
+    build: 
+      context: ./backend/order
+    container_name: order-ms
+    networks:
+      - ecommerce
+    depends_on:
+      - db
+  gateway:
+    build:
+      context: ./backend/gateway
+    container_name: ecommerce-gateway
+    networks:
+      - ecommerce
+    env_file:
+      - ./backend/gateway/prod.env
+    depends_on:
+      - auth
+      - order
+      - product
+    ports:
+      - 3000:3000
+
+volumes:
+  potsgreDB:
+
+networks:
+  ecommerce:
+    name: ecommerce_net
