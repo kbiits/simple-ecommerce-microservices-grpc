@@ -15,6 +15,7 @@ func RegisterRoutes(router *gin.Engine, cfg *config.Config, authMid *auth.AuthMi
 
 	productRoutes := router.Group("/product")
 	productRoutes.Use(authMid.RequireAuth)
+	productRoutes.GET("", svc.listProducts)
 	productRoutes.GET("/:product_id", svc.findOneProduct)
 	productRoutes.POST("", svc.createProduct)
 
@@ -27,4 +28,8 @@ func (svc *ProductServiceClient) findOneProduct(ctx *gin.Context) {
 
 func (svc *ProductServiceClient) createProduct(ctx *gin.Context) {
 	routes.CreateProduct(ctx, svc.Client)
+}
+
+func (svc *ProductServiceClient) listProducts(ctx *gin.Context) {
+	routes.ListProducts(ctx, svc.Client)
 }

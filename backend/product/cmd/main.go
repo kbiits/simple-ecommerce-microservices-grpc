@@ -12,6 +12,7 @@ import (
 	"github.com/kbiits/microservices-grpc-simple-ecommerce-product-service/pkg/pb"
 	"github.com/kbiits/microservices-grpc-simple-ecommerce-product-service/pkg/services"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -36,6 +37,7 @@ func main() {
 	}
 	grpcServer := grpc.NewServer()
 	pb.RegisterProductServiceServer(grpcServer, srv)
+	reflection.Register(grpcServer)
 
 	log.Printf("Started grpc server on addr %v\n", addr)
 

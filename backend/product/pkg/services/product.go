@@ -20,6 +20,7 @@ func (s *Service) CreateProduct(ctx context.Context, req *pb.CreateProductReques
 		Name:  req.Product.Name,
 		Stock: req.Product.Stock,
 		Price: req.Product.Price,
+		Sku: req.Product.Sku,
 	}
 
 	if result := s.DB.Create(product); result.Error != nil {
