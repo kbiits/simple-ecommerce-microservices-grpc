@@ -1,0 +1,16 @@
+@startuml ecommerce
+
+rectangle "auth service" as auth_ms
+rectangle "order service" as order_ms
+rectangle "product service" as product_ms
+rectangle "API gateway" as gateway
+
+usecase request
+
+request -> gateway
+
+gateway --> auth_ms
+gateway --> order_ms
+gateway --> product_ms
+
+@enduml
