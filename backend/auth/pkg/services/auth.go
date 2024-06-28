@@ -31,6 +31,8 @@ func (s *Service) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.Re
 	}
 
 	user.Email = req.User.Email
+	user.Fullname = req.User.Fullname
+	user.Dob = req.User.Dob.AsTime()
 	hashed, err := utils.HashPassword(req.User.Password)
 	if err != nil {
 		return &pb.RegisterResponse{
