@@ -21,7 +21,8 @@ var _ pb.AuthServiceServer = &Service{}
 func (s *Service) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	var user models.User
 
-	if result := s.DB.Where(&models.User{Email: req.User.Email}).First(&user); result.Error == nil {
+	res := s.DB.Where("email = ?", req.User.Email).First(&user)
+	if res.Error == nil {
 		return &pb.RegisterResponse{
 			Response: &pb.Response{
 				Status: http.StatusConflict,
@@ -31,6 +32,8 @@ func (s *Service) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.Re
 	}
 
 	user.Email = req.User.Email
+	user.Fullname = req.User.Fullname
+	user.Dob = req.User.Dob.AsTime()
 	hashed, err := utils.HashPassword(req.User.Password)
 	if err != nil {
 		return &pb.RegisterResponse{
@@ -55,7 +58,7 @@ func (s *Service) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.Re
 func (s *Service) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
 	var user models.User
 
-	res := s.DB.Find(&models.User{Email: req.Email}).First(&user)
+	res := s.DB.Where("email = ?", req.Email).First(&user)
 	if res.Error != nil {
 		return &pb.LoginResponse{
 			Response: &pb.Response{
@@ -69,7 +72,7 @@ func (s *Service) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginRes
 		return &pb.LoginResponse{
 			Response: &pb.Response{
 				Status: http.StatusNotFound,
-				Error:  "User not found",
+				Error:  "Invalid credentials",
 			},
 		}, nil
 	}
